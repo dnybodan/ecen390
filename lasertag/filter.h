@@ -139,6 +139,6 @@ queue_t *filter_getZQueue(uint16_t filterNumber);
 // Returns the address of the IIR output-queue for a specific filter-number.
 queue_t *filter_getIirOutputQueue(uint16_t filterNumber);
 
-// void filter_runTest();
+void filter_runTest();
 
 #endif /* FILTER_H_ */
