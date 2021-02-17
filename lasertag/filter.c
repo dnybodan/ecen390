@@ -247,6 +247,7 @@ double filter_firFilter() {
     // FIR filter
     queue_overwritePush(&yQueue, queue_readElementAt(&xQueue, i));
   }
+  return tempZ;
 }
 
 // Use this to invoke a single iir filter. Input comes from yQueue.
@@ -279,7 +280,7 @@ double filter_iirFilter(uint16_t filterNumber) {
     queue_overwritePush(&outputQueue[filterNumber], tempZ);
     queue_overwritePush(&zQueue[filterNumber], tempZ);
   }
-  // return &zQueue.data;
+  return tempZ;
 }
 
 // Use this to compute the power for values contained in an outputQueue.
@@ -305,6 +306,7 @@ double filter_computePower(uint16_t filterNumber, bool forceComputeFromScratch,
            queue_readElementAt(&outputQueue[filterNumber], i);
   }
   currentPowerValue[filterNumber] = sum;
+  return sum;
 }
 
 // Returns the last-computed output power value for the IIR filter
