@@ -16,7 +16,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define FILTER_SAMPLE_FREQUENCY_IN_KHZ 100
 #define FILTER_FREQUENCY_COUNT 10
 #define FILTER_FIR_DECIMATION_FACTOR                                           \
-  10 // FIR-filter needs this many new inputs to compute a new output.
+10 // FIR-filter needs this many new inputs to compute a new output.
 #define FILTER_INPUT_PULSE_WIDTH                                               \
   2000 // This is the width of the pulse you are looking for, in terms of
        // decimated sample count.
