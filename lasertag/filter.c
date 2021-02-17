@@ -384,10 +384,10 @@ uint32_t filter_getYQueueSize() { return zQueue->size; }
 uint16_t filter_getDecimationValue() { return DECIMATION_FACTOR; }
 
 // Returns the address of xQueue.
-queue_t *filter_getXQueue() { &xQueue; }
+queue_t *filter_getXQueue() { return &xQueue; }
 
 // Returns the address of yQueue.
-queue_t *filter_getYQueue() { &yQueue; }
+queue_t *filter_getYQueue() { return &yQueue; }
 
 // Returns the address of zQueue for a specific filter number.
 queue_t *filter_getZQueue(uint16_t filterNumber) {
