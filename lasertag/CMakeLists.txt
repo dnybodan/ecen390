@@ -4,6 +4,7 @@ filterTest.c
 histogram.c
 sound.c
 timer_ps.c
+filter.c
 # runningModes.c
 )
 
