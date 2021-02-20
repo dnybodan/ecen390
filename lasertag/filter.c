@@ -252,28 +252,6 @@ void filter_fillQueue(queue_t *q, double fillValue) {
   // Use this to invoke a single iir filter. Input comes from yQueue.
   // Output is returned and is also pushed onto zQueue[filterNumber].
   double filter_iirFilter(uint16_t filterNumber) {
-    double tempb = 0.0;
-    double tempa = 0.0;
-    double tempz = 0.0;
-
-    // iterating through every value of the input data and then calculating
-    // transfer function
-    for (uint32_t i = 0; i < Y_QUEUE_SIZE; i++) {
-      tempb += queue_readElementAt(&yQueue, IIR_COEF_COUNT - 1 - i) *
-               iir_b_coeffs[filterNumber][i];
-    }
-
-    for (uint32_t i = 0; i < Y_QUEUE_SIZE; i++) {
-      tempa += queue_readElementAt(&yQueue, IIR_COEF_COUNT - 1 - i) *
-               iir_a_coeffs[filterNumber][i];
-    }
-
-    tempz = tempb - tempa;
-    // overwrite the oldest element with the new filtered value
-
-    queue_overwritePush(&(zQueue[filterNumber]), tempz);
-
-    return tempz;
     double tempb = 0;
     double tempa = 0;
     double tempZ = 0;
