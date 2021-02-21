@@ -365,11 +365,11 @@ void filter_getNormalizedPowerValues(double normalizedArray[],
 *functions. ***********************
 **********************************************************************************************************/
 
-// Returns the array of FIR coefficients.
-const double *filter_getFirCoefficientArray() { return fir_coeffs; }
+  // Returns the array of FIR coefficients.
+  const double *filter_getFirCoefficientArray() { return fir_coeffs; }
 
-// Returns the number of FIR coefficients.
-uint32_t filter_getFirCoefficientCount() { return FIR_COEF_COUNT; }
+  // Returns the number of FIR coefficients.
+  uint32_t filter_getFirCoefficientCount() { return FIR_COEF_COUNT; }
 
 // Returns the array of coefficients for a particular filter number.
 const double *filter_getIirACoefficientArray(uint16_t filterNumber) {
@@ -390,22 +390,23 @@ uint32_t filter_getIirBCoefficientCount() { return IIR_COEF_COUNT; }
 // Returns the size of the yQueue.
 uint32_t filter_getYQueueSize() { return Y_QUEUE_SIZE; }
 
-// Returns the decimation value.
-uint16_t filter_getDecimationValue() { return DECIMATION_FACTOR; }
+  // Returns the decimation value.
+  uint16_t filter_getDecimationValue() { return DECIMATION_FACTOR; }
 
-// Returns the address of xQueue.
-queue_t *filter_getXQueue() { return &xQueue; }
+  // Returns the address of xQueue.
+  queue_t *filter_getXQueue() { return &xQueue; }
 
-// Returns the address of yQueue.
-queue_t *filter_getYQueue() { return &yQueue; }
+  // Returns the address of yQueue.
+  queue_t *filter_getYQueue() { return &yQueue; }
 
-// Returns the address of zQueue for a specific filter number.
-queue_t *filter_getZQueue(uint16_t filterNumber) {
-  return &zQueue[filterNumber];
-}
+  // Returns the address of zQueue for a specific filter number.
+  queue_t *filter_getZQueue(uint16_t filterNumber) {
+    return &zQueue[filterNumber];
+  }
 
 // Returns the address of the IIR output-queue for a specific filter-number.
 queue_t *filter_getIirOutputQueue(uint16_t filterNumber) {
   return &outputQueue[filterNumber];
 }
 // void filter_runTest();
+
