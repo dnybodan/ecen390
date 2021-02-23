@@ -12,16 +12,27 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdint.h>
 #include <stdio.h>
 
+// Number of FIR Coeefficitnets
 #define FIR_COEF_COUNT 81
+//number of queues in z
 #define NUM_Z_QUEUES 10
+//the z queue size
 #define Z_QUEUE_SIZE 10
+//default array name size
 #define DEFAULT_NAME_SIZE 50
+//x queue size
 #define X_QUEUE_SIZE 81
+//y queue size
 #define Y_QUEUE_SIZE 11
+//output queue size
 #define OUTPUT_QUEUE_SIZE 2000
+//decimation factor
 #define DECIMATION_FACTOR 10
+//iir coefficient count
 #define IIR_COEF_COUNT 11
+//the power value size
 #define POWER_VAL_SIZE 10
+//iir a coefficient count
 #define IIR_A_COEF_COUNT 10
 // Filtering routines for the laser-tag project.
 // Filtering is performed by a two-stage filter, as described below.
@@ -69,6 +80,7 @@ const static double fir_coeffs[FIR_COEF_COUNT] = {
     -1.6663618496969908e-03, -1.3082618178394971e-03, -8.8813878356223768e-04,
     -4.7488111478632532e-04, -1.1360489934931548e-04, 1.7398667197948182e-04,
     3.8449091272701525e-04,  5.2507143315267811e-04,  6.0546138291252597e-04};
+//initialize array for the iir a coefficients
 const static double
     iir_a_coeffs[FILTER_FREQUENCY_COUNT][FILTER_FREQUENCY_COUNT] = {
         {-5.9637727070164015e+00, 1.9125339333078248e+01,
@@ -115,6 +127,7 @@ const static double
          1.3928510844056814e+02, 1.6305115418161620e+02, 1.3648147221895786e+02,
          8.0686288623299745e+01, 3.2276361903872115e+01, 7.9045143816244696e+00,
          9.0332828533799636e-01}};
+//initialize the array for the b coefficients 
 const static double iir_b_coeffs[FILTER_FREQUENCY_COUNT][IIR_COEF_COUNT] = {
     {9.0928451882350956e-10, -0.0000000000000000e+00, -4.5464225941175478e-09,
      -0.0000000000000000e+00, 9.0928451882350956e-09, -0.0000000000000000e+00,
@@ -156,7 +169,7 @@ const static double iir_b_coeffs[FILTER_FREQUENCY_COUNT][IIR_COEF_COUNT] = {
      0.0000000000000000e+00, 9.0907017986989551e-09, 0.0000000000000000e+00,
      -9.0907017986989551e-09, 0.0000000000000000e+00, 4.5453508993494776e-09,
      0.0000000000000000e+00, -9.0907017986989547e-10}};
-
+//array declaration for the power values for each output
 static double currentPowerValue[POWER_VAL_SIZE];
 
 // initializes all attributes to zero
@@ -292,12 +305,15 @@ double filter_iirFilter(uint16_t filterNumber) {
 // 4. Compute new power as: prev-power - (oldest-value * oldest-value) +
 // (newest-value * newest-value). Note that this function will probably need
 // an array to keep track of these values for each of the 10 output queues.
-
+// oldest value is used to calculate the oldest value in a certain filter queue
 double oldest_value[FILTER_FREQUENCY_COUNT] = {0.0, 0.0, 0.0, 0.0, 0.0,
                                                0.0, 0.0, 0.0, 0.0, 0.0};
+//newest value is used to store and access the newest value in a filter queue
 double newest_value[FILTER_FREQUENCY_COUNT] = {0.0, 0.0, 0.0, 0.0, 0.0,
                                                0.0, 0.0, 0.0, 0.0, 0.0};
 
+//compute power will use the filter number and the output queue to calculate the power comming from each of the filters 
+//to determine which player frequency is recieved
 double filter_computePower(uint16_t filterNumber, bool forceComputeFromScratch,
                            bool debugPrint) {
   double sum = 0;
@@ -305,14 +321,15 @@ double filter_computePower(uint16_t filterNumber, bool forceComputeFromScratch,
   // iterate through each value in the filter and compute its energy by
   // squaring it and adding to the next value
   if (forceComputeFromScratch) {
+    //iterate through each of the elements in the output queue for a certain filter and then sum their squares
     for (int32_t i = 0; i < queue_size(&outputQueue[filterNumber]); i++) {
       sum += queue_readElementAt(&outputQueue[filterNumber], i) *
              queue_readElementAt(&outputQueue[filterNumber], i);
     }
     currentPowerValue[filterNumber] = sum;
 
-  } else {
-
+  }  else {
+    //if not computing from scratch, use the newest and oldest value to compute power
     newest_value[filterNumber] =
         queue_readElementAt(&outputQueue[filterNumber],
                             (queue_size(&outputQueue[filterNumber]) - 1));
@@ -322,7 +339,7 @@ double filter_computePower(uint16_t filterNumber, bool forceComputeFromScratch,
 
     currentPowerValue[filterNumber] = sum;
   }
-
+  //compute oldest value
   oldest_value[filterNumber] =
       queue_readElementAt(&outputQueue[filterNumber], 0);
   return currentPowerValue[filterNumber];
@@ -346,6 +363,7 @@ void filter_getCurrentPowerValues(double powerValues[]) {
   }
 }
 
+//get the normalized values for each power value in the power value array
 void filter_getNormalizedPowerValues(double normalizedArray[],
                                      uint16_t *indexOfMaxValue) {
   // iterate through the current power value array and find the largest value
@@ -365,11 +383,11 @@ void filter_getNormalizedPowerValues(double normalizedArray[],
 *functions. ***********************
 **********************************************************************************************************/
 
-  // Returns the array of FIR coefficients.
-  const double *filter_getFirCoefficientArray() { return fir_coeffs; }
+// Returns the array of FIR coefficients.
+const double *filter_getFirCoefficientArray() { return fir_coeffs; }
 
-  // Returns the number of FIR coefficients.
-  uint32_t filter_getFirCoefficientCount() { return FIR_COEF_COUNT; }
+// Returns the number of FIR coefficients.
+uint32_t filter_getFirCoefficientCount() { return FIR_COEF_COUNT; }
 
 // Returns the array of coefficients for a particular filter number.
 const double *filter_getIirACoefficientArray(uint16_t filterNumber) {
@@ -390,23 +408,22 @@ uint32_t filter_getIirBCoefficientCount() { return IIR_COEF_COUNT; }
 // Returns the size of the yQueue.
 uint32_t filter_getYQueueSize() { return Y_QUEUE_SIZE; }
 
-  // Returns the decimation value.
-  uint16_t filter_getDecimationValue() { return DECIMATION_FACTOR; }
+// Returns the decimation value.
+uint16_t filter_getDecimationValue() { return DECIMATION_FACTOR; }
 
-  // Returns the address of xQueue.
-  queue_t *filter_getXQueue() { return &xQueue; }
+// Returns the address of xQueue.
+queue_t *filter_getXQueue() { return &xQueue; }
 
-  // Returns the address of yQueue.
-  queue_t *filter_getYQueue() { return &yQueue; }
+// Returns the address of yQueue.
+queue_t *filter_getYQueue() { return &yQueue; }
 
-  // Returns the address of zQueue for a specific filter number.
-  queue_t *filter_getZQueue(uint16_t filterNumber) {
-    return &zQueue[filterNumber];
-  }
+// Returns the address of zQueue for a specific filter number.
+queue_t *filter_getZQueue(uint16_t filterNumber) {
+  return &zQueue[filterNumber];
+}
 
 // Returns the address of the IIR output-queue for a specific filter-number.
 queue_t *filter_getIirOutputQueue(uint16_t filterNumber) {
   return &outputQueue[filterNumber];
 }
 // void filter_runTest();
-
